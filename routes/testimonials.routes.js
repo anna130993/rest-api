@@ -13,7 +13,7 @@ router.route('/testimonials/random').get((req, res) => {
 });
 
 router.route('/testimonials/:id').get((req, res) => {
-    const item = db.testimonials.find(item => item.id == req.params.id);
+    const item = db.testimonials.find(item => item.id === req.params.id);
     
     if(item) res.json(item);
     else res.status(404).json({message: 'Page not found'});
@@ -25,23 +25,24 @@ router.route('/testimonials').post((req, res) => {
     if(author && text) {
         const id = uuidv4();
         db.testimonials.push({id, author, text});
-        res.json({message: 'OK'});
-    } else res.status(404).json({message: 'Page not found'});
+        res.status(201).json({message: 'Created'});
+    } else res.status(400).json({message: 'Bad request'});
 });
 
 router.route('/testimonials/:id').put((req, res) => {
-    const item = db.testimonials.find(item => item.id == req.params.id);
+    const item = db.testimonials.find(item => item.id === req.params.id);
     const {author, text} = req.body;
 
     if(item && author && text) {
         item.author = author;
         item.text = text;
         res.json({message: 'OK'});
-    } else res.status(404).json({message: 'Page not found'});
+    } else if (!item) res.status(404).json({message: 'Page not found'});
+    else res.status(400).json({message: "Bad request"});
 });
 
 router.route('/testimonials/:id').delete((req, res) => {
-    const item = db.testimonials.find(item => item.id == req.params.id);
+    const item = db.testimonials.find(item => item.id === req.params.id);
 
     if(item) {
         db.testimonials.splice(db.testimonials.indexOf(item), 1);
