@@ -1,9 +1,8 @@
 const Seat = require('../models/seat.model');
-const Concert = require('../models/concert.model');
 
 exports.getAll = async (req, res) => {
     try {
-        res.json(await Seat.find().populate('concert'));
+        res.json(await Seat.find());
     }
     catch(err) {
         res.status(500).json({message: err});
@@ -12,7 +11,7 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
     try {
-        const seating = await Seat.findById(req.params.id).populate('concert');
+        const seating = await Seat.findById(req.params.id);
         if(!seating) res.status(404).json({message: 'Not found'});
         else res.json(seating);
     }
@@ -22,16 +21,17 @@ exports.getById = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-    const {seat, client, email, concert} = req.body;
+    const {seat, client, email, day} = req.body;
     try {
-        await Concert.exists({_id: concert});
-        const isTaken = await Seat.exists({concert: concert, seat: seat});
+        const isTaken = await Seat.exists({day: day, seat: seat});
         if(isTaken) {
             res.status(409).json({message: 'This slot is already taken! Try another!'});
         } else {
-            const newSeat = new Seat ({seat, client, email, concert});
+            const newSeat = new Seat ({seat, client, email, day});
             await newSeat.save();
             res.json({message: 'OK'});
+            const seats = await Seat.find();
+            req.io.emit('seatsUpdated', seats);
         }
     }
     catch (err) {
@@ -40,10 +40,9 @@ exports.post = async (req, res) => {
 };
 
 exports.put = async (req, res) => {
-    const {seat, client, email, concert} = req.body;
+    const {seat, client, email, day} = req.body;
     try {
-        await Concert.exists({_id: concert});
-        const isTaken = await Seat.exists({concert: concert, seat:seat});
+        const isTaken = await Seat.exists({day: day, seat:seat});
         if(isTaken) {
             res.status(409).json({message: 'This slot is already taken! Try another!'});
         } else {

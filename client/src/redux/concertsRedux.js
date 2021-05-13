@@ -58,7 +58,11 @@ const initialState = {
 export default function reducer(statePart = initialState, action = {}) {
   switch (action.type) {
     case LOAD_CONCERTS: 
-      return { ...statePart, data: [...action.payload] };
+      const concerts = action.payload.map(({day, ...other}) => ({
+        day: day.number,
+        ...other,
+      }));
+      return {...statePart, data: [...concerts]};
     case START_REQUEST:
       return { ...statePart, request: { pending: true, error: null, success: false } };
     case END_REQUEST:
