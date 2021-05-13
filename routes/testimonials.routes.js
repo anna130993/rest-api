@@ -1,17 +1,18 @@
 const express = require('express');
-const router = express.Router();
 const TestimonialController = require('../controllers/testimonials.controller');
 
-router.route('/testimonials').get(TestimonialController.getAll);
+const router = express.Router();
 
-router.route('/testimonials/random').get(TestimonialController.getRandom);
+router.get('/testimonials', TestimonialController.getAll);
 
-router.route('/testimonials/:id').get(TestimonialController.getById);
+router.get('/testimonials/random', TestimonialController.getRandom);
 
-router.route('/testimonials').post(TestimonialController.post);
+router.get('/testimonials/:id', TestimonialController.getSingle);
 
-router.route('/testimonials/:id').put(TestimonialController.put);
+router.post('/testimonials', TestimonialController.post);
 
-router.route('/testimonials/:id').delete(TestimonialController.delete);
+router.put('/testimonials/:id', TestimonialController.put);
+
+router.delete('/testimonials/:id', TestimonialController.delete);
 
 module.exports = router;

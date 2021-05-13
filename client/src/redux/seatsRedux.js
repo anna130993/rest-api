@@ -55,7 +55,7 @@ export const addSeatRequest = (seat) => {
       dispatch(endRequest({ name: 'ADD_SEAT' }));
 
     } catch(e) {
-      dispatch(errorRequest({ name: 'ADD_SEAT', error: e.response.data.message }));
+      dispatch(errorRequest({ name: 'ADD_SEAT', error: e.message }));
     }
 
   };
@@ -73,12 +73,7 @@ const initialState = {
 export default function reducer(statePart = initialState, action = {}) {
   switch (action.type) {
     case LOAD_SEATS:
-      const seats = action.payload.map(({day, _id, ...others}) => ({
-        id: _id, 
-        day: day.number,
-        ...others,
-      }));
-      return {...statePart, data: [...seats]};
+      return { ...statePart, data: [...action.payload] };
     case ADD_SEAT:
       return { ...statePart, data: [...statePart.data, action.payload] }
     case START_REQUEST:

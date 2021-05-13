@@ -5,19 +5,15 @@ import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooserContainer';
 
 class OrderTicketForm extends React.Component {
+
   state = {
     order: {
       client: '',
       email: '',
-      day: '609d5bb7e548de351b2f2316',
+      day: 1,
       seat: '',
     },
     isError: false,
-  }
-
-  componentDidMount () {
-    const {loadDays} = this.props;
-    loadDays();
   }
 
   updateSeat = (e, seatId) => {
@@ -41,10 +37,6 @@ class OrderTicketForm extends React.Component {
     this.setState({ order: { ...order, [name]: parseInt(value) }});
   }
 
-  getChosenDay = id => {
-    console.log(this.props.days);
-  };
-
   submitForm = async (e) => {
     const { order } = this.state;
     const { addSeat } = this.props;
@@ -57,7 +49,7 @@ class OrderTicketForm extends React.Component {
         order: {
           client: '',
           email: '',
-          day: this.state.order.day,
+          day: 1,
           seat: '',
         },
         isError: false,
@@ -69,8 +61,8 @@ class OrderTicketForm extends React.Component {
 
   render() {
 
-    const { updateSeat, updateTextField, submitForm } = this;
-    const { requests, days } = this.props;
+    const { updateSeat, updateTextField, updateNumberField, submitForm } = this;
+    const { requests } = this.props;
     const { order, isError } = this.state;
 
     return (
@@ -91,10 +83,10 @@ class OrderTicketForm extends React.Component {
             </FormGroup>
             <FormGroup>
               <Label for="clientDay">Select which day of festivals are you interested in:</Label>
-              <Input type="select" value={order.day} name="day" onChange={updateTextField} id="exampleSelect">
-                {days.map(({id, number}) => (
-                  <option key={id} value={id}>{number}</option>
-                ))}
+              <Input type="select" value={order.day} name="day" onChange={updateNumberField} id="exampleSelect">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
               </Input>
               <small id="dayHelp" className="form-text text-muted">Every day of the festival uses individual ticket. You can book only one ticket at the time.</small>
             </FormGroup>
@@ -106,10 +98,10 @@ class OrderTicketForm extends React.Component {
             <Button color="primary" className="mt-3">Submit</Button>
           </Col>
           <Col xs="12" md="6">
-            {days && <SeatChooser
-              chosenDay={this.getChosenDay(order.day)}
+            <SeatChooser
+              chosenDay={order.day}
               chosenSeat={order.seat}
-              updateSeat={updateSeat} />}
+              updateSeat={updateSeat} />
           </Col>
         </Row>
       </Form>
