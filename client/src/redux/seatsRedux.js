@@ -73,8 +73,9 @@ const initialState = {
 export default function reducer(statePart = initialState, action = {}) {
   switch (action.type) {
     case LOAD_SEATS:
-      const seats = action.payload.map(({_id, ...others}) => ({
+      const seats = action.payload.map(({day, _id, ...others}) => ({
         id: _id, 
+        day: day.number,
         ...others,
       }));
       return {...statePart, data: [...seats]};
