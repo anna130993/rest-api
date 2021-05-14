@@ -54,7 +54,7 @@ exports.put = async (req, res) => {
       const newDay = await dayling.save();
       res.json(newDay);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -68,7 +68,7 @@ exports.delete = async (req, res) => {
       await dayling.remove();
       res.json(dayling);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });

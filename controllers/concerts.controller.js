@@ -46,7 +46,7 @@ exports.put = async (req, res) => {
       const newCon = await con.save();
       res.json(newCon);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -60,7 +60,7 @@ exports.delete = async (req, res) => {
       await con.remove();
       res.json(con);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });

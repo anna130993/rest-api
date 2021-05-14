@@ -27,7 +27,7 @@ exports.post = async (req, res) => {
     await Day.exists({_id: day});
     const isTaken = await Seat.exists({day: day, seat: seat});
     if (isTaken) {
-      res.status(409).json({ message: "The slot is already taken..." });
+      res.status(409).json({ message: "The slot is already taken! Try another!" });
     } else {
       const newSeat = new Seat({ seat, client, email, day });
       const saved = await newSeat.save();
@@ -47,7 +47,7 @@ exports.put = async (req, res) => {
     await Day.exists({_id: day});
     const isTaken = await Seat.exists({ day: day, seat: seat });
     if (isTaken) {
-      res.status(409).json({ message: "The slot is already taken..." });
+      res.status(409).json({ message: "The slot is already taken! Try another!" });
     } else {
       const seating = await (Seat.findById(req.params.id));
       if (seating) {
@@ -58,7 +58,7 @@ exports.put = async (req, res) => {
         const newSeat = await seating.save();
         res.json(newSeat);
       }
-      else res.status(404).json({ message: 'Not found...' });
+      else res.status(404).json({ message: 'Not found' });
     }
   }
   catch (err) {
@@ -73,7 +73,7 @@ exports.delete = async (req, res) => {
       await seating.remove();
       res.json(seating);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });

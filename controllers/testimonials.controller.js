@@ -55,7 +55,7 @@ exports.put = async (req, res) => {
       const newTestimonial = await testim.save();
       res.json(newTestimonial);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -69,7 +69,7 @@ exports.delete = async (req, res) => {
       await testim.remove();
       res.json(testim);
     }
-    else res.status(404).json({ message: 'Not found...' });
+    else res.status(404).json({ message: 'Not found' });
   }
   catch (err) {
     res.status(500).json({ message: err });
