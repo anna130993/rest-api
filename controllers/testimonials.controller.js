@@ -13,9 +13,9 @@ exports.getRandom = async (req, res) => {
   try {
     const count = await Testimonial.countDocuments();
     const rand = Math.floor(Math.random() * count);
-    const t = await Testimonial.findOne().skip(rand);
-    if (!t) res.status(404).json({ message: 'Not found' });
-    else res.json(t);
+    const testim = await Testimonial.findOne().skip(rand);
+    if (!testim) res.status(404).json({ message: 'Not found' });
+    else res.json(testim);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -24,9 +24,9 @@ exports.getRandom = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const t = await Testimonial.findById(req.params.id);
-    if (!t) res.status(404).json({ message: 'Not found' });
-    else res.json(t);
+    const testim = await Testimonial.findById(req.params.id);
+    if (!testim) res.status(404).json({ message: 'Not found' });
+    else res.json(testim);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -48,10 +48,11 @@ exports.post = async (req, res) => {
 exports.put = async (req, res) => {
   const { author, text } = req.body;
   try {
-    const t = await (Testimonial.findById(req.params.id));
-    if (t) {
-      Object.assign(t, {author, text});
-      const newTestimonial = await t.save();
+    const testim = await (Testimonial.findById(req.params.id));
+    if (testim) {
+      testim.author = author;
+      testim.text = text;
+      const newTestimonial = await testim.save();
       res.json(newTestimonial);
     }
     else res.status(404).json({ message: 'Not found...' });
@@ -63,10 +64,10 @@ exports.put = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const t = await (Testimonial.findById(req.params.id));
-    if (t) {
-      await t.remove();
-      res.json(t);
+    const testim = await (Testimonial.findById(req.params.id));
+    if (testim) {
+      await testim.remove();
+      res.json(testim);
     }
     else res.status(404).json({ message: 'Not found...' });
   }

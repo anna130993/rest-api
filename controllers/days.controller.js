@@ -13,9 +13,9 @@ exports.getRandom = async (req, res) => {
   try {
     const count = await Day.countDocuments();
     const rand = Math.floor(Math.random() * count);
-    const d = await Day.findOne().skip(rand);
-    if (!d) res.status(404).json({ message: 'Not found' });
-    else res.json(t);
+    const dayling = await Day.findOne().skip(rand);
+    if (!dayling) res.status(404).json({ message: 'Not found' });
+    else res.json(dayling);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -24,9 +24,9 @@ exports.getRandom = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const d = await Day.findById(req.params.id);
-    if (!d) res.status(404).json({ message: 'Not found' });
-    else res.json(d);
+    const dayling = await Day.findById(req.params.id);
+    if (!dayling) res.status(404).json({ message: 'Not found' });
+    else res.json(dayling);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -48,10 +48,10 @@ exports.post = async (req, res) => {
 exports.put = async (req, res) => {
   const { number } = req.body;
   try {
-    const d = await (Day.findById(req.params.id));
-    if (d) {
-      Object.assign(d, { number });
-      const newDay = await d.save();
+    const dayling = await (Day.findById(req.params.id));
+    if (dayling) {
+      dayling.number = number;
+      const newDay = await dayling.save();
       res.json(newDay);
     }
     else res.status(404).json({ message: 'Not found...' });
@@ -63,10 +63,10 @@ exports.put = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const d = await (Day.findById(req.params.id));
-    if (d) {
-      await d.remove();
-      res.json(d);
+    const dayling = await (Day.findById(req.params.id));
+    if (dayling) {
+      await dayling.remove();
+      res.json(dayling);
     }
     else res.status(404).json({ message: 'Not found...' });
   }

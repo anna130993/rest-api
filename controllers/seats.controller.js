@@ -12,9 +12,9 @@ exports.getAll = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const s = await Seat.findById(req.params.id).populate('day');
-    if (!s) res.status(404).json({ message: 'Not found' });
-    else res.json(s);
+    const seating = await Seat.findById(req.params.id).populate('day');
+    if (!seating) res.status(404).json({ message: 'Not found' });
+    else res.json(seating);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -49,10 +49,13 @@ exports.put = async (req, res) => {
     if (isTaken) {
       res.status(409).json({ message: "The slot is already taken..." });
     } else {
-      const s = await (Seat.findById(req.params.id));
-      if (s) {
-        Object.assign(s, {seat, client, email, day});
-        const newSeat = await s.save();
+      const seating = await (Seat.findById(req.params.id));
+      if (seating) {
+        seating.seat = seat;
+        seating.client = client;
+        seating.email = email;
+        seating.day = day;
+        const newSeat = await seating.save();
         res.json(newSeat);
       }
       else res.status(404).json({ message: 'Not found...' });
@@ -65,10 +68,10 @@ exports.put = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const s = await (Seat.findById(req.params.id));
-    if (s) {
-      await s.remove();
-      res.json(s);
+    const seating = await (Seat.findById(req.params.id));
+    if (seating) {
+      await seating.remove();
+      res.json(seating);
     }
     else res.status(404).json({ message: 'Not found...' });
   }

@@ -38,7 +38,11 @@ exports.put = async (req, res) => {
   try {
     const con = await (Concert.findById(req.params.id));
     if (con) {
-      Object.assign(con, { performer, genre, price, day, image });
+      con.performer = performer;
+      con.genre = genre;
+      con.price = price;
+      con.day = day;
+      con.image = image;
       const newCon = await con.save();
       res.json(newCon);
     }
