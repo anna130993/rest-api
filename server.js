@@ -33,7 +33,6 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Page not found' });
 });
 
-// connects our backend code with the database
 mongoose.connect('mongodb+srv://13099319AmZ:BD17MjLxkWIMB81X@cluster0.jq4ob.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true });
 const db = mongoose.connection;
 
