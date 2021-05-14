@@ -1,83 +1,78 @@
 const Seat = require('../models/seat.model');
+const Day = require('../models/day.model');
 
 exports.getAll = async (req, res) => {
   try {
-    res.json(await Seat.find().populate('concert'));
+    res.json(await Seat.find().populate('day'));
   }
-  catch(err) {
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
-exports.getSingle = async (req, res) => {
+exports.getById = async (req, res) => {
   try {
-    const seat = await Seat.findById(req.params.id).populate('concert');
-    if(!seat) {
-      res.status(404).json({ message: 'Not found' });
-    } else {
-      res.json(seat);
-    }
+    const s = await Seat.findById(req.params.id).populate('day');
+    if (!s) res.status(404).json({ message: 'Not found' });
+    else res.json(s);
   }
-  catch(err) {
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
 exports.post = async (req, res) => {
+  const { seat, client, email, day } = req.body;
   try {
-    const { seat, client, email, concert } = req.body;
-    const newSeat = new Seat({
-      seat: seat,
-      client: client,
-      email: email,
-      concert: concert,
-    });
-    await newSeat.save();
-    res.json({ message: 'OK' });
+    await Day.exists({_id: day});
+    const isTaken = await Seat.exists({day: day, seat: seat});
+    if (isTaken) {
+      res.status(409).json({ message: "The slot is already taken..." });
+    } else {
+      const newSeat = new Seat({ seat, client, email, day });
+      const saved = await newSeat.save();
+      res.status(201).json(saved);
+      const seats = await Seat.find().populate('day');
+      req.io.emit('seatsUpdated', seats);
+    }
   }
-  catch(err) {
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
 exports.put = async (req, res) => {
+  const { seat, client, email, day } = req.body;
   try {
-    const seat = await Seat.findById(req.params.id);
-    if(!seat) {
-      res.status(404).json({ message: 'Not found' });
+    await Day.exists({_id: day});
+    const isTaken = await Seat.exists({ day: day, seat: seat });
+    if (isTaken) {
+      res.status(409).json({ message: "The slot is already taken..." });
     } else {
-      const { seat, client, email, concert } = req.body;
-      await Seat.updateOne({ _id: req.params.id }, { $set: {
-        seat: seat,
-        client: client,
-        email: email,
-        concert: concert,
-      }});
-      res.json({ 
-        message: 'OK',
-        updatedSeat: await Seat.findById(req.params.id).populate('concert'),
-      });
+      const s = await (Seat.findById(req.params.id));
+      if (s) {
+        Object.assign(s, {seat, client, email, day});
+        const newSeat = await s.save();
+        res.json(newSeat);
+      }
+      else res.status(404).json({ message: 'Not found...' });
     }
   }
-  catch(err) {
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
 exports.delete = async (req, res) => {
   try {
-    const seat = await Seat.findById(req.params.id).populate('concert');
-    if(!seat) {
-      res.status(404).json({ message: 'Not found' });
-    } else {
-      await Seat.deleteOne({ _id: req.params.id });
-      res.json({
-        message: 'OK',
-        deletedSeat: await seat,
-      });
+    const s = await (Seat.findById(req.params.id));
+    if (s) {
+      await s.remove();
+      res.json(s);
     }
+    else res.status(404).json({ message: 'Not found...' });
   }
-  catch(err) {
+  catch (err) {
     res.status(500).json({ message: err });
   }
 };

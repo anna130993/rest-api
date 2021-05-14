@@ -1,8 +1,8 @@
-const Testimonial = require('../models/testimonial.model');
+const Day = require('../models/day.model');
 
 exports.getAll = async (req, res) => {
   try {
-    res.json(await Testimonial.find());
+    res.json(await Day.find());
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -11,10 +11,10 @@ exports.getAll = async (req, res) => {
 
 exports.getRandom = async (req, res) => {
   try {
-    const count = await Testimonial.countDocuments();
+    const count = await Day.countDocuments();
     const rand = Math.floor(Math.random() * count);
-    const t = await Testimonial.findOne().skip(rand);
-    if (!t) res.status(404).json({ message: 'Not found' });
+    const d = await Day.findOne().skip(rand);
+    if (!d) res.status(404).json({ message: 'Not found' });
     else res.json(t);
   }
   catch (err) {
@@ -24,9 +24,9 @@ exports.getRandom = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const t = await Testimonial.findById(req.params.id);
-    if (!t) res.status(404).json({ message: 'Not found' });
-    else res.json(t);
+    const d = await Day.findById(req.params.id);
+    if (!d) res.status(404).json({ message: 'Not found' });
+    else res.json(d);
   }
   catch (err) {
     res.status(500).json({ message: err });
@@ -34,10 +34,10 @@ exports.getById = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-  const { author, text } = req.body;
+  const { number } = req.body;
   try {
-    const newTestimonial = new Testimonial({ author, text });
-    await newTestimonial.save();
+    const newDay = new Day({ number });
+    await newDay.save();
     res.json({ message: 'OK' });
   }
   catch (err) {
@@ -46,13 +46,13 @@ exports.post = async (req, res) => {
 };
 
 exports.put = async (req, res) => {
-  const { author, text } = req.body;
+  const { number } = req.body;
   try {
-    const t = await (Testimonial.findById(req.params.id));
-    if (t) {
-      Object.assign(t, {author, text});
-      const newTestimonial = await t.save();
-      res.json(newTestimonial);
+    const d = await (Day.findById(req.params.id));
+    if (d) {
+      Object.assign(d, { number });
+      const newDay = await d.save();
+      res.json(newDay);
     }
     else res.status(404).json({ message: 'Not found...' });
   }
@@ -63,10 +63,10 @@ exports.put = async (req, res) => {
 
 exports.delete = async (req, res) => {
   try {
-    const t = await (Testimonial.findById(req.params.id));
-    if (t) {
-      await t.remove();
-      res.json(t);
+    const d = await (Day.findById(req.params.id));
+    if (d) {
+      await d.remove();
+      res.json(d);
     }
     else res.status(404).json({ message: 'Not found...' });
   }

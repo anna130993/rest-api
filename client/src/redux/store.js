@@ -4,11 +4,13 @@ import thunk from 'redux-thunk';
 // import reducers
 import concerts from './concertsRedux';
 import seats from './seatsRedux';
+import days from './daysRedux';
 
 // combine reducers
 const rootReducer = combineReducers({
   concerts,
   seats,
+  days,
 });
 
 const store = createStore(
