@@ -33,11 +33,12 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Page not found' });
 });
 
-mongoose.connect('mongodb+srv://13099319AmZ:BD17MjLxkWIMB81X@cluster0.jq4ob.mongodb.net/NewWaveDB?retryWrites=true&w=majority', { useNewUrlParser: true });
+const dbURI = process.env.NODE_ENV === 'test' ? 'mongodb://localhost:27017/NWTest' : 'mongodb+srv://13099319AmZ:BD17MjLxkWIMB81X@cluster0.jq4ob.mongodb.net/NewWaveDB?retryWrites=true&w=majority';
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log('Connected to the database');
+  console.log('Connected to the database: ', dbURI);
 });
 db.on('error', err => console.log('Error ' + err));
 
@@ -48,3 +49,5 @@ const io = socket(server);
 io.on('connection', socket => {
   console.log('New socket ', socket.id);
 });
+
+module.exports = server;
