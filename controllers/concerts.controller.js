@@ -4,15 +4,15 @@ const Seat = require('../models/seat.model');
 
 exports.getAll = async (req, res) => {
   try {
-    const allConcerts = await Concert.find().populate('day');
-    const displayConcerts = await Promise.all(allConcerts.map(async concert => {
-      const reservedSeats = await Seat.countDocuments({day: concert.day._id});
-      return {
-        ...concert.toObject(),
-        tickets: (50 - reservedSeats),
-      };
-    }));
-    res.json(displayConcerts);
+    //const allConcerts = await Concert.find().populate('day');
+    //const displayConcerts = await Promise.all(allConcerts.map(async concert => {
+      //const reservedSeats = await Seat.countDocuments({day: concert.day._id});
+      //return {
+        //...concert.toObject(),
+        //ticketsAmount: 50 - reservedSeats,
+      //};
+    //}));
+    res.json(await Concert.find().populate('day'));
   }
   catch (err) {
     res.status(500).json({ message: err });

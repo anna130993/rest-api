@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { API_URL } from '../config';
 
+const seatsCount = 50;
 /* SELECTORS */
 export const getConcerts = ({ concerts, seats }) => {
   return concerts.data.map(concert => {
-    return {...concert, tickets: 50 - seats.data.filter(seat => seat.day === concerts.day).length}
+    return {
+      ...concert, 
+      tickets: (seatsCount - seats.data.filter(seat => seat.day === concerts.day).length)}
   });
 };
 
@@ -37,6 +40,7 @@ export const loadConcertsRequest = () => {
     try {
       let res = await axios.get(`${API_URL}/concerts`);
       dispatch(loadConcerts(res.data));
+      debugger
       dispatch(endRequest());
 
     } catch(e) {
