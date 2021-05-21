@@ -2,7 +2,12 @@ import axios from 'axios';
 import { API_URL } from '../config';
 
 /* SELECTORS */
-export const getConcerts = ({ concerts }) => concerts.data;
+export const getConcerts = ({ concerts, seats }) => {
+  return concerts.data.map(concert => {
+    return {...concert, tickets: 50 - seats.data.filter(seat => seat.day === concerts.day).length}
+  });
+};
+
 export const getRequest = ({ concerts }) => concerts.request;
 
 /* ACTIONS */
@@ -30,7 +35,6 @@ export const loadConcertsRequest = () => {
 
     dispatch(startRequest());
     try {
-
       let res = await axios.get(`${API_URL}/concerts`);
       dispatch(loadConcerts(res.data));
       dispatch(endRequest());
@@ -58,7 +62,7 @@ const initialState = {
 export default function reducer(statePart = initialState, action = {}) {
   switch (action.type) {
     case LOAD_CONCERTS: 
-    const concerts = action.payload.map(({day, _id, ...other}) => ({
+    const concerts = action.payload.map(({day, _id, ...other }) => ({
       id: _id,
       day: day.number,
       ...other,

@@ -6,8 +6,9 @@ import Concerts from './../Concerts/Concerts';
 class Lineup extends React.Component {
 
   componentDidMount() {
-    const { loadConcerts } = this.props;
+    const { loadConcerts, loadSeats } = this.props;
     loadConcerts();
+    //loadSeats();
   }
 
   render() {
