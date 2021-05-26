@@ -34,7 +34,9 @@ exports.getById = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-  const { author, text } = req.body;
+  const author = sanitize(req.body.author);
+  const text = sanitize(req.body.text);
+  
   try {
     const newTestimonial = new Testimonial({ author, text });
     await newTestimonial.save();

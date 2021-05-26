@@ -34,7 +34,8 @@ exports.getById = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-  const { number } = req.body;
+  const number = sanitize(req.body.number);
+  
   try {
     const newDay = new Day({ number });
     await newDay.save();

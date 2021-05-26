@@ -22,7 +22,11 @@ exports.getById = async (req, res) => {
 };
 
 exports.post = async (req, res) => {
-  const { seat, client, email, day } = req.body;
+  const seat = sanitize(req.body.seat);
+  const client = sanitize(req.body.client);
+  const email = sanitize(req.body.email);
+  const day = sanitize(req.body.day);
+  
   try {
     await Day.exists({_id: day});
     const isTaken = await Seat.exists({day: day, seat: seat});
