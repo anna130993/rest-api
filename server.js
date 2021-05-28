@@ -36,7 +36,7 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Page not found' });
 });
 
-const dbURI = process.env.NODE_ENV === 'production' ? 'mongodb://localhost:27017/NWTest' : `mongodb+srv://13099319AmZ:${process.env.DB_PASSWORD}@cluster0.jq4ob.mongodb.net/NewWaveDB?retryWrites=true&w=majority`;
+const dbURI = process.env.NODE_ENV === 'test' ? 'mongodb://localhost:27017/NWTest' : `mongodb+srv://13099319AmZ:${process.env.DB_PASSWORD}@cluster0.jq4ob.mongodb.net/NewWaveDB?retryWrites=true&w=majority`;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
